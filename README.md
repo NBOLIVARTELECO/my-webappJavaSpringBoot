@@ -94,4 +94,3 @@ El archivo `src/main/resources/application.properties` se puede usar para config
 Puedes importar este proyecto en tu IDE favorito (como IntelliJ IDEA, Eclipse o VS Code) como un proyecto Maven existente.
 
 ---
-Generado por tu asistente de código. 
