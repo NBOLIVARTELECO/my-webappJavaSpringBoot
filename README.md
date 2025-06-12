@@ -1,96 +1,168 @@
-# Proyecto Spring Boot - My WebApp
+# Gestor de Tareas - Aplicación Web Spring Boot
 
-Este es un proyecto Spring Boot básico, generado con Spring Initializr, configurado como una aplicación web con Maven y Java 21.
+Esta es una aplicación web simple para gestionar tareas, desarrollada con Spring Boot y MySQL. Está diseñada para ser fácil de entender y modificar, perfecta para principiantes en Spring Boot.
 
-## Tecnologías Utilizadas
+## 🚀 Características
 
-*   **Spring Boot**: Framework para facilitar la creación de aplicaciones Spring.
-*   **Maven**: Herramienta de construcción y gestión de dependencias.
-*   **Java 21**: Versión LTS (Long Term Support) de Java.
-*   **Spring Web**: Módulo de Spring para construir aplicaciones web, incluyendo RESTful APIs.
+- Crear nuevas tareas con título y descripción
+- Marcar tareas como completadas
+- Eliminar tareas
+- Interfaz web amigable con Bootstrap
+- Almacenamiento persistente en MySQL
 
-## Estructura del Proyecto
+## 🛠️ Tecnologías Utilizadas
 
-La estructura del proyecto sigue las convenciones de Maven y Spring Boot:
+- **Java 21**: Lenguaje de programación principal
+- **Spring Boot 3.2.3**: Framework para desarrollo web
+- **Spring Data JPA**: Para manejo de base de datos
+- **MySQL**: Base de datos para almacenamiento persistente
+- **Thymeleaf**: Motor de plantillas para las vistas
+- **Bootstrap 5**: Framework CSS para el diseño
+- **Maven**: Gestor de dependencias y construcción
+
+## 📁 Estructura del Proyecto
 
 ```
 my-webapp/
 ├── src/
 │   ├── main/
 │   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── example/
-│   │   │           └── mywebapp/
-│   │   │               └── MyWebAppApplication.java
-│   │   │               └── controller/
-│   │   │                   └── MyController.java
+│   │   │   └── com/example/mywebapp/
+│   │   │       ├── MyWebAppApplication.java    # Punto de entrada de la aplicación
+│   │   │       ├── controller/                 # Controladores (manejan las peticiones web)
+│   │   │       │   ├── HomeController.java     # Controlador de la página principal
+│   │   │       │   └── TaskController.java     # Controlador de las tareas
+│   │   │       ├── model/                      # Modelos (representan los datos)
+│   │   │       │   └── Task.java              # Modelo de tarea
+│   │   │       └── repository/                 # Repositorios (acceso a la base de datos)
+│   │   │           └── TaskRepository.java     # Repositorio de tareas
 │   │   └── resources/
-│   │       ├── application.properties
-│   │       └── static/
-│   │       └── templates/
-│   └── test/
-│       └── java/
-│           └── com/
-│               └── example/
-│                   └── mywebapp/
-│                       └── MyWebAppApplicationTests.java
-├── pom.xml
-└── README.md
+│   │       ├── application.properties          # Configuración de la aplicación
+│   │       └── templates/                      # Plantillas HTML
+│   │           └── tasks.html                  # Vista principal de tareas
+│   └── test/                                   # Pruebas unitarias
+└── pom.xml                                     # Configuración de Maven
 ```
 
-*   `src/main/java`: Contiene el código fuente Java de la aplicación.
-*   `src/main/resources`: Contiene archivos de configuración, recursos estáticos y plantillas.
-*   `src/test/java`: Contiene los tests de la aplicación.
-*   `pom.xml`: Archivo de configuración de Maven, define las dependencias y la forma de construir el proyecto.
-*   `MyWebAppApplication.java`: Clase principal de la aplicación Spring Boot.
-*   `MyController.java`: Un controlador REST simple para manejar solicitudes HTTP.
+## 📝 Explicación de los Archivos Principales
 
-## Cómo Ejecutar la Aplicación
+### 1. MyWebAppApplication.java
+Este es el punto de entrada de la aplicación. Contiene el método `main` que inicia todo. Spring Boot usa esta clase para configurar automáticamente la aplicación.
 
-Para ejecutar este proyecto, asegúrate de tener Maven y Java 21 (o superior) instalados en tu sistema.
+### 2. Task.java (Modelo)
+```java
+@Entity
+public class Task {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String description;
+    private boolean completed;
+    // ... otros campos y métodos
+}
+```
+- `@Entity`: Indica que esta clase representa una tabla en la base de datos
+- `@Id`: Marca el campo como clave primaria
+- `@GeneratedValue`: Configura la generación automática del ID
 
-1.  **Navega al directorio raíz del proyecto:**
+### 3. TaskController.java (Controlador)
+```java
+@Controller
+@RequestMapping("/tasks")
+public class TaskController {
+    // ... métodos para manejar las peticiones web
+}
+```
+- `@Controller`: Indica que esta clase maneja peticiones web
+- `@RequestMapping("/tasks")`: Define la ruta base para todas las operaciones de tareas
+- Métodos principales:
+  - `listTasks()`: Muestra todas las tareas
+  - `createTask()`: Crea una nueva tarea
+  - `toggleTask()`: Marca/desmarca una tarea como completada
+  - `deleteTask()`: Elimina una tarea
 
-    ```bash
-    cd my-webapp
-    ```
+### 4. TaskRepository.java (Repositorio)
+```java
+@Repository
+public interface TaskRepository extends JpaRepository<Task, Long> {
+    // Los métodos CRUD básicos se heredan automáticamente
+}
+```
+- `@Repository`: Indica que esta interfaz maneja el acceso a datos
+- Extiende `JpaRepository` para obtener automáticamente métodos como:
+  - `save()`: Guardar una tarea
+  - `findAll()`: Obtener todas las tareas
+  - `findById()`: Buscar una tarea por ID
+  - `deleteById()`: Eliminar una tarea
 
-2.  **Compila y empaqueta la aplicación usando Maven:**
+### 5. tasks.html (Vista)
+```html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <!-- ... estructura HTML ... -->
+</html>
+```
+- Usa Thymeleaf para mostrar datos dinámicos
+- Incluye formularios para crear y gestionar tareas
+- Utiliza Bootstrap para el diseño
 
-    ```bash
-    mvn clean install
-    ```
+### 6. application.properties (Configuración)
+```properties
+# Configuración de MySQL
+spring.datasource.url=jdbc:mysql://localhost:3306/taskdb
+spring.datasource.username=root
+spring.datasource.password=
+```
+- Configura la conexión a la base de datos
+- Define el puerto del servidor
+- Configura otras propiedades de Spring Boot
 
-    Esto creará un archivo JAR ejecutable en el directorio `target/`.
+## 🚀 Cómo Ejecutar la Aplicación
 
-3.  **Ejecuta la aplicación:**
+1. **Requisitos Previos**:
+   - Java 21 instalado
+   - Maven instalado
+   - MySQL (XAMPP) instalado y corriendo
 
-    ```bash
-    java -jar target/my-webapp-0.0.1-SNAPSHOT.jar
-    ```
+2. **Configuración de la Base de Datos**:
+   - Asegúrate de que MySQL esté corriendo en XAMPP
+   - La base de datos `taskdb` se creará automáticamente
 
-    Alternativamente, puedes usar el plugin de Spring Boot para Maven:
+3. **Ejecutar la Aplicación**:
+   ```bash
+   mvn spring-boot:run
+   ```
 
-    ```bash
-    mvn spring-boot:run
-    ```
+4. **Acceder a la Aplicación**:
+   - Abre tu navegador
+   - Ve a `http://localhost:8080`
 
-    La aplicación se iniciará en `http://localhost:8080`.
+## 🔧 Personalización
 
-## Endpoints de la API
+### Agregar Nuevos Campos a una Tarea
+1. Modifica `Task.java` para agregar el nuevo campo
+2. Actualiza `tasks.html` para mostrar el nuevo campo
+3. La base de datos se actualizará automáticamente
 
-Una vez que la aplicación esté en funcionamiento, puedes acceder a los siguientes endpoints:
+### Cambiar el Diseño
+1. Modifica `tasks.html`
+2. Puedes usar clases de Bootstrap o agregar CSS personalizado
 
-*   **`GET /`**: Retorna un saludo simple.
+## 📚 Recursos Adicionales
 
-    Ejemplo: `http://localhost:8080/`
+- [Documentación de Spring Boot](https://spring.io/projects/spring-boot)
+- [Guía de Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
+- [Documentación de Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
+- [Tutorial de Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 
-## Configuración
+## 🤝 Contribuir
 
-El archivo `src/main/resources/application.properties` se puede usar para configurar la aplicación, por ejemplo, el puerto del servidor, la configuración de la base de datos, etc.
+Siéntete libre de:
+- Reportar problemas
+- Sugerir mejoras
+- Enviar pull requests
 
-## Desarrollo
+## 📄 Licencia
 
-Puedes importar este proyecto en tu IDE favorito (como IntelliJ IDEA, Eclipse o VS Code) como un proyecto Maven existente.
-
----
+Este proyecto está bajo la Licencia MIT. 
